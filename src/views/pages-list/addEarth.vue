@@ -1,7 +1,7 @@
 <template>
   <div class="addEarth">
     <my-header :title="pageTitle"></my-header>
-    <div id="three"></div>
+    <div id="three" @touchmove="moveCir"></div>
   </div>
 </template>
 
@@ -31,13 +31,17 @@ export default {
     this.draw();
     this.animate();
   
-    document.getElementById("three").addEventListener('mouseout',()=>{
-      console.log('执行了')
+    // document.getElementById("three").addEventListener('touchmove',()=>{
+    //   console.log('执行了',controls.getAzimuthalAngle())
 
-    },false)
+    // },false)
     
   },
   methods: {
+    //移动圆形
+    moveCir(){
+      console.log('执行了',controls.getAzimuthalAngle())
+    },
     initRenderer() {
       renderer = new THREE.WebGLRenderer({ antialias: true });
       renderer.setSize(window.innerWidth, window.innerHeight);
@@ -93,10 +97,10 @@ export default {
       controls = new OrbitControls(camera, renderer.domElement);
       //是否自动旋转
       controls.autoRotate = false;
-      controls.maxAzimuthAngle = -((Math.PI / 90) * 80);
-      controls.minAzimuthAngle = -((Math.PI / 90) * 90);
-      controls.maxPolarAngle = (Math.PI / 90) * 30;
-      controls.minPolarAngle = (Math.PI / 90) * 20;
+      // controls.maxAzimuthAngle = -((Math.PI / 90) * 80);
+      // controls.minAzimuthAngle = -((Math.PI / 90) * 90);
+      // controls.maxPolarAngle = (Math.PI / 90) * 30;
+      // controls.minPolarAngle = (Math.PI / 90) * 20;
       // 使动画循环使用时阻尼或自转 意思是否有惯性
       controls.enableDamping = true;
       //是否可以缩放
@@ -106,6 +110,16 @@ export default {
       controls.minDistance = 1;
       //设置相机距离原点的最远距离
       controls.maxDistance = 2000;
+
+      controls.addEventListener('change',()=>{
+        var nowXangele = controls.getAzimuthalAngle()
+         console.log('执行了======',nowXangele)
+        if(nowXangele >= 0){
+         controls.panSpeed = .4
+          console.log('执行了======',controls)
+        }
+        var nowYangele = controls.getPolarAngle()
+      },)
     },
     render() {
       controls.update();
